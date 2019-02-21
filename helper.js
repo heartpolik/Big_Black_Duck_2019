@@ -51,7 +51,7 @@ module.exports = {
         result = [];
     str += data.length;
     for (let {x1, y1, x2, y2} of data) {
-      str += '\n' + [y1, x1, y2, x2].join(' ');
+      //str += '\n' + [y1, x1, y2, x2].join(' ');
     }
     return str;
   }
