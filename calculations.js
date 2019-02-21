@@ -10,11 +10,29 @@ module.exports = {
 			}
 		}
 	},
-	getSlicePrices(slices, pick, pizza) {
+
+	getBounds(X,Y){
+		let row = pizza[Y];
+		let xi = X;
+		let yi = Y;
+		let i = "";
+		while (xi >=0 && i!=="*") {
+			i = row[xi];
+			xi--;
+		}
+		while(yi >=0 && i!=="*"){
+			i=pizza[yi][xi];
+			yi--;
+		}
+		return {xi, yi}
+	},
+	getSlicePrices(slices, pick, pizza, good, bad) {
 		let y = pick[0],
 				x = pick[1];
 
+		let bounds = getBounds(pick[0], pick[1]);
 		slices.forEach(slice=>{
+
 
 		})
 	}
