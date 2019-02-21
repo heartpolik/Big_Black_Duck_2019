@@ -47,8 +47,11 @@ module.exports = {
    * @returns {string}
    */
   convertResult(data) {
-    let result = [];
-
+		let result = [];
+		result.push(data.length);
+    data.map((item) => {
+		  result.push(`${item.y1} ${item.x1} ${item.y2} ${item.x2}`)
+    });
     return result.join('\n');
   }
 
