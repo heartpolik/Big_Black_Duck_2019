@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const fs = require('fs');
 const config = require('config');
 const helper = require('./helper');
@@ -22,20 +23,26 @@ process.exit(0);
  * @returns {*}
  */
 function parse(inputData) {
+  let result = {global: {}, data: []};
   let rows = inputData.split('\n');
   rows.pop();
-  console.log(rows);
-  for (let row of rows) {
-    let columns = row
-        .split(' ')
-        .map(Number);
-    //getColumnObject(columns);
-  }
-  return {};
-};
 
-// function getColumnObject(columns) {
-//   return {
-//     valera: columns[0]
-//   };
-// }
+  for (let i  in rows) {
+    let row = rows[i],
+        column = !Number(i) ? row.split(' ') : row.split('');
+    if (!Number(i)) {
+      result.global['rows'] = Number(column[0]);
+      result.global['columns'] = Number(column[1]);
+      result.global['minEach'] = Number(column[2]);
+      result.global['maxTotal'] = Number(column[3]);
+      result.global.tCount = 0;
+      result.global.mCount = 0;
+    } else {
+      result.data.push(column);
+      result.global.tCount += _.filter(column, (data) => data === 'T').length;
+      result.global.mCount += _.filter(column, (data) => data === 'M').length;
+    }
+
+  }
+  return result;
+}
