@@ -1,0 +1,25 @@
+{
+  "name": "Big_Black_Duck_2019",
+  "version": "1.0.0",
+  "description": "BBD hash code 2019 solution",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/radiosource/Big_Black_Duck_2019"
+  },
+  "author": {
+    "name": "Oleh Zahnitko",
+    "email": "oleh.zahnitko@ria.com"
+  },
+  "dependencies": {
+    "config": "^3.0.1",
+    "lodash": "^4.17.5"
+  },
+  "scripts": {
+    "index": "node --max-old-space-size=8192 ./index.js",
+    "parse": "node --max-old-space-size=8192 ./parser.js"
+  },
+  "engines": {
+    "node": ">=7.6.x"
+  }
+}
