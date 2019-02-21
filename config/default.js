@@ -20,6 +20,7 @@ module.exports = {
     'index.js',
     'parser.js',
     'helper.js',
+    'calculations.js',
     'package.json',
     'config/default.js',
   ]
