@@ -23,17 +23,27 @@ process.exit(0);
  * @returns {*}
  */
 function parse(inputData) {
-  let result = {global: {}, data: []};
+  let result = {photosCount: {}, v: [], h: []};
   let rows = inputData.split('\n');
   rows.pop();
 
   rows
       .forEach((row, i) => {
-        let column = !Number(i) ? row.split(' ') : row.split('');
-        if (i) {
-          result.global = Number(column[0]);
+        if (!i) {
+          result.photosCount = Number(row.trim());
         } else {
-          result.data.push(column);
+          let column = row.split(' '),
+              obj = {
+                tags: {}
+              },
+              orientation = column.shift().toLowerCase(),
+              tagsCount = Number(column.shift()),
+              tags = column.reduce((memo, tag) => {
+                memo[tag] = true;
+                return memo
+              }, {});
+          Object.assign(obj, {tagsCount, tags});
+          result[orientation].push(tags);
         }
       });
   return result;
