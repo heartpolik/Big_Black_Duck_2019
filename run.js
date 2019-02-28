@@ -1,71 +1,62 @@
+const c = require('./calculations');
+
 /** @todo
  *
  * @param inputData
  * @returns {*}
  */
 module.exports = async ({global, data}) => {
-  let result = [];
-  let min = global.tCount < global.mCount ? 'T' : 'M';
+	let result = [];
+	let bad    = global.tCount < global.mCount ? 'T' : 'M';
+	let good   = global.tCount >= global.mCount ? 'T' : 'M';
+	let data2 = JSON.parse(JSON.stringify(data));
 
-  for (let y in data) {
-    let row = data[y];
-    for (let x in row) {
-      let v = row[x];
-      if (v === min) {
-        x = Number(x);
-        y = Number(y);
-        let slice = getSlice({x1: x, x2: x, y1: y, y2: y}, 'x')
-        if (slice) {
-          result.push(slice);
-        }
-      }
-    }
-  }
-  console.log(result);
-  process.exit(0);
-  return result;
+	let slices = c.getSliceSides(global.maxTotal, global.minEach);
+	console.log(data);
+	console.log("goo->", good, "baa->", bad);
+	console.log("slices",slices);
+	console.log(global);
+	let gcount = 0;
+	for (let x = 0; x < global.columns; x++) {
+		for (let y = 0; y < global.rows; y++) {
+			// console.log("coo->",data[y][x]);
+			if (data[y][x] === bad) {
+				let prices     = c.getSlicePrices(slices, {y,x}, data, good, bad, global.minEach);
+				// console.log("price",prices);
+				let maxPricePc = {};
+				let price      = 0;
+				let bc      = 100;
+				prices.forEach(pc => {
+					if (pc.price > price) {
+						if(bc > pc.bc){
+						price      = pc.price;
+						bc      = pc.bc;
+						maxPricePc = pc;
+					}
+					}
+				});
+				// console.log("max", maxPricePc);
+				c.setArea(maxPricePc.x1, maxPricePc.y1, maxPricePc.x2, maxPricePc.y2, data);
+				c.setArea(maxPricePc.x1, maxPricePc.y1, maxPricePc.x2, maxPricePc.y2, data2, String(gcount));
+				console.log(data);
+				console.log(data2);
+				result.push({
+					x1:maxPricePc.x1,
+					y1:maxPricePc.y1,
+					x2:maxPricePc.x2,
+					y2:maxPricePc.y2,
+					price:maxPricePc.price,
+					sm:gcount
+				})
+			}
+			gcount++;
+		}
+	}
 
-  function getSlice({x1, x2, y1, y2}, step) {
-    if (valid({x1, y1, x2, y2})) {
-      for (let _y = y1; _y <= y2; _y++) {
-        for (let _x = x1; _x <= x2; _x++) {
-          if (!(data[_y] && data[_y][_x])) continue;
-          data[_y][_x] = undefined;
-          return {x1, y1, x2, y2};
-        }
-      }
-    }
-    else {
-      if (step === 'x') {
-        x2++;
-        step = 'y'
-      } else {
-        y2++;
-        step = 'x'
-      }
-      return getSlice({x1, x2, y1, y2}, step)
-    }
-  }
 
-  function valid({x1, y1, x2, y2}) {
-    let res = {T: 0, M: 0};
-    for (let _y = y1; _y <= y2; _y++) {
-      for (let _x = x1; _x <= x2; _x++) {
-        if (!(data[_y] && data[_y][_x])) continue;
-        let v = data[_y][_x];
-        res[v]++;
-        if(!v) return false;
-      }
-    }
-    let totalCount = res.T + res.M;
-
-    if (totalCount > global.maxTotal) {
-      return false;
-    }
-    else if (res.T < global.minEach || res.M < global.minEach) {
-      return false;
-    }
-    return true
-  }
+	console.log(data);
+	console.log(data2);
+	console.log("RESULT", result);
+	return result;
 };
 
