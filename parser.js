@@ -23,7 +23,7 @@ process.exit(0);
  * @returns {*}
  */
 function parse(inputData) {
-  let result = {photosCount: {}, v: [], h: []};
+  let result = {photosCount: {}, v: {}, h: {}};
   let rows = inputData.split('\n');
   rows.pop();
 
@@ -43,7 +43,7 @@ function parse(inputData) {
                 return memo
               }, {});
           Object.assign(obj, {tagsCount, tags});
-          result[orientation].push(tags);
+          result[orientation][i - 1] = tags;
         }
       });
   return result;
