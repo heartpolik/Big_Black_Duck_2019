@@ -1,6 +1,6 @@
 module.exports = {
   root: `${__dirname}/..`,
-  sets: ['a', 'b', 'c', 'd'/*, 'e'*/],
+  sets: ['a', 'b', 'c', 'd', 'e'],
   /** @todo
    *
    * @param set
@@ -8,11 +8,11 @@ module.exports = {
    */
   getSourceFileName(set) {
     return {
-      a: `${set}_example.in`,
-      b: `${set}_small.in`,
-      c: `${set}_medium.in`,
-      d: `${set}_big.in`,
-      //e: `${set}_.in`,
+      a: `${set}_example.txt`,
+      b: `${set}_lovely_landscapes.txt.txt`,
+      c: `${set}_memorable_moments.txt`,
+      d: `${set}_pet_pictures.txt`,
+      e: `${set}_shiny_selfies.txt`,
     }[set]
   },
   filesToZip: [
