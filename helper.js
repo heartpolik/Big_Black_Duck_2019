@@ -46,13 +46,13 @@ module.exports = {
    * @param data - json
    * @returns {string}
    */
-  convertResult(data=[]) {
+  convertResult(data) {
     let str = '',
         result = [];
     str += data.length;
-    // for (let {x1, y1, x2, y2} of data) {
-    //   str += '\n' + [y1, x1, y2, x2].join(' ');
-    // }
+    for (let slide of data) {
+      str += '\n' + slide;
+    }
     return str;
   }
 

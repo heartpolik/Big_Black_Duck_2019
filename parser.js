@@ -23,7 +23,7 @@ process.exit(0);
  * @returns {*}
  */
 function parse(inputData) {
-  let result = {photosCount: {}, v: {}, h: {}};
+  let result = {photosCount: {}, items: {}};
   let rows = inputData.split('\n');
   rows.pop();
 
@@ -37,13 +37,16 @@ function parse(inputData) {
                 tags: {}
               },
               orientation = column.shift().toLowerCase(),
+              v = orientation === 'v',
+              h = orientation === 'h',
               tagsCount = Number(column.shift()),
               tags = column.reduce((memo, tag) => {
                 memo[tag] = true;
                 return memo
               }, {});
           Object.assign(obj, {tagsCount, tags});
-          result[orientation][i - 1] = tags;
+          result.items[i-1]={tags: column, v, h, tagsCount,index:i-1};
+          //result.items.push({tags: column, v, h, tagsCount,index:i-1});
         }
       });
   return result;
