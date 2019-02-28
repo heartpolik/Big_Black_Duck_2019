@@ -11,7 +11,7 @@ let sets = helper.getSets();
   for (let set of sets) {
     console.time(`== ${set} finished by`);
     let inputData = helper.getParsedData(set);
-
+    console.log(inputData);
     let result = await run(inputData);
 
     let outputData = helper.convertResult(result);

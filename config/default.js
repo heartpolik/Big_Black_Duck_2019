@@ -9,7 +9,7 @@ module.exports = {
   getSourceFileName(set) {
     return {
       a: `${set}_example.txt`,
-      b: `${set}_lovely_landscapes.txt.txt`,
+      b: `${set}_lovely_landscapes.txt`,
       c: `${set}_memorable_moments.txt`,
       d: `${set}_pet_pictures.txt`,
       e: `${set}_shiny_selfies.txt`,

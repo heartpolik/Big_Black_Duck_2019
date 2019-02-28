@@ -1,10 +1,11 @@
 const _ = require('lodash')
 /** @todo
  *
- * @param inputData
+ * @param data
  * @returns {*}
  */
-module.exports = async ({global, data}) => {
+module.exports = async (data) => {
+  console.log(data);
   let result = [];
   return result;
 };
