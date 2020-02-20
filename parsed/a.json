@@ -1,0 +1,1 @@
+{"n_books":6,"n_libs":2,"deadline":7,"books_prices":["1","2","3","6","5","4"],"libs":[{"n_books":5,"time_reg":2,"productivity":2,"books":["0","1","2","3","4"],"total_price":17,"weight":3.4,"power":3.4},{"n_books":4,"time_reg":3,"productivity":1,"books":["0","2","3","5"],"total_price":14,"weight":1.5,"power":3.5}]}

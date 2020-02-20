@@ -23,32 +23,44 @@ process.exit(0);
  * @returns {*}
  */
 function parse(inputData) {
-  let result = {photosCount: {}, items: {}};
+  let cnt = 0;
+  let result = {
+    n_books:0,
+    n_libs:0,
+    deadline:0,
+    books_prices:[],
+    libs:[]
+  };
   let rows = inputData.split('\n');
-  rows.pop();
-
-  rows
-      .forEach((row, i) => {
-        if (!i) {
-          result.photosCount = Number(row.trim());
-        } else {
-          let column = row.split(' '),
-              obj = {
-                tags: {}
-              },
-              orientation = column.shift().toLowerCase(),
-              v = orientation === 'v',
-              h = orientation === 'h',
-              tagsCount = Number(column.shift()),
-              tags = column.reduce((memo, tag) => {
-                memo[tag] = true;
-                return memo
-              }, {});
-          Object.assign(obj, {tagsCount, tags});
-          result.items[i-1]={tags: column, v, h, tagsCount,index:i-1};
-          //result.items.push({tags: column, v, h, tagsCount,index:i-1});
-        }
-      });
+  let o1st_str = rows.shift().split(' ');
+  result.n_books = Number(o1st_str[0]);
+  result.n_libs = Number(o1st_str[1]);
+  result.deadline = Number(o1st_str[2]);
+  result.books_prices = rows.shift().split(' ');
+  while (rows.length) {
+    let library = {
+      n_books:0,
+      time_reg:0,
+      productivity:0,
+      books:[],
+      total_price:0,
+      weight:0,
+      power:0
+    };
+    let libData1 = rows.shift().split(' ');
+    let libData2 = rows.shift();
+    library.n_books = Number(libData1[0]);
+    library.time_reg = Number(libData1[1]);
+    library.productivity = Number(libData1[2]);
+    if (library.time_reg < result.deadline){
+      library.books = libData2.split(' ').sort();
+      library.total_price = library.books.reduce(function(acc, val) { return Number(acc) + Number(result.books_prices[val]); }, 0);
+      library.power = library.total_price/library.books.length;
+      library.weight = library.power - library.time_reg + library.productivity;
+      result.libs.push(library);
+      console.log('result' + cnt++);
+    }
+  }
   return result;
 }
 
