@@ -49,9 +49,10 @@ module.exports = {
   convertResult(data) {
     let str = '',
         result = [];
-    str += data.length;
-    for (let slide of data) {
-      str += '\n' + slide;
+    str += data.libsCount;
+    for (let libs of data.libsResult) {
+      console.log(libs);
+      str += '\n' + `${libs.index} ${libs.booksCount}\n${libs.books.join(' ')}`;
     }
     return str;
   }

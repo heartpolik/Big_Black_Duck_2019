@@ -55,7 +55,7 @@ function parse(inputData) {
     if (library.time_reg < result.deadline){
       library.books = libData2.split(' ').sort();
       library.total_price = library.books.reduce(function(acc, val) { return Number(acc) + Number(result.books_prices[val]); }, 0);
-      library.power = library.total_price/library.books.length;
+      library.power = Math.round(library.total_price/library.books.length);
       library.weight = library.power - library.time_reg + library.productivity;
       result.libs.push(library);
       console.log('result' + cnt++);

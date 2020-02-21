@@ -4,109 +4,93 @@ const _ = require('lodash')
  * @param inputData
  * @returns {*}
  */
-module.exports = async ({items, photosCount}) => {
-  let lastPhoto;
-  let lastProcessedPhotoIndex;
-  let i = 0;
-  let slides = [];
-  let minPhoto;
-  for (let index in items) {
-    minPhoto = minPhoto || index;
-    if (items[index].tagsCount > items[minPhoto].tagsCount) minPhoto = index;
-  }
+module.exports = async (params) => {
 
-  processSlide(items[minPhoto]);
-  runFind(slides);
+  let features = ['time_reg', 'productivity', 'power', 'n_books', 'weight'];
 
-  return slides;
-
-  function pushSlide(slide1, slide2) {
-    if (slide2) {
-      slides.push(`${slide1.index} ${slide2.index}`) //махнути местом
-      lastPhoto = slide2;
-    } else {
-      slides.push(`${slide1.index}`);
-      lastPhoto = slide1;
-    }
-  }
-
-
-  function processSlide(slide) {
-
-    if (slide.h) {
-      pushSlide(slide);
-      delete items[slide.index];
-    } else {
-      let slide2;
-      delete items[slide.index];
-
-      slide2 = findSimilar(slide, 'v');
-
-      if (slide2) {
-        delete items[slide2.index];
-      } else if (!slide2) {
-        for (let index in items) {
-          if (items[index].v) {
-            slide2 = items[index];
-            delete items[index];
-            break;
-          }
-        }
+  let tree = {};
+  params.libs.forEach((lib, i) => {
+    features.forEach(ftr => {
+      if (!tree.hasOwnProperty(ftr)) tree[ftr] = {} ;
+      if (tree[ftr].hasOwnProperty(lib[ftr])) {
+        tree[ftr][lib[ftr]].push(i)
+      } else {
+        tree[ftr][lib[ftr]] = [];
+        tree[ftr][lib[ftr]].push(i)
       }
-      slide2 && pushSlide(slide, slide2);
-    }
+    })
+  })
+  // console.log(tree);
+  let mp = [], mpl = 0;
+  Object.keys(tree).forEach(trk=>{
+    mp.push([Object.keys(tree[trk]).length, trk]);
+  })
+  mp.sort((a,b)=>{ return b[0]-a[0];})
+  console.log(mp);
+
+  let bestKey = Object.keys(tree[mp[0][1]]).sort((a,b)=>{return Number(b)-Number(a)}).shift();
+  let bestLibs = tree[mp[0][1]][bestKey]
+bestLibs = bestLibs.concat(tree[mp[1][1]][bestKey]);
+ bestLibs = bestLibs.concat(tree[mp[2][1]][bestKey]);
+ bestLibs = bestLibs.concat(tree[mp[3][1]][bestKey]);
+  console.log(bestKey);
+  console.log(bestLibs);
+  console.log(params.libs[bestLibs[0]]);
+
+
+  let timeLeft = params.deadline;
+  let libProcesses = {
+    libOnCheck : [],
+    libChecked : []
   }
+  let libsCount = 0;
+  let libsResult = [];
+  for (let d = 0; d <= timeLeft; d++){
+    if (libProcesses.libOnCheck[0] && libProcesses.libOnCheck[0].time_reg === 0)
+    {
 
+      let libtotransfer = libProcesses.libOnCheck[0]
 
-  function runFind(slides) {
-    i++;
-    //lastProcessedPhotoIndex =
-    let _keys = Object.keys(items);
-    console.log("_keys : " + _keys.length);
-    if (!_keys.length || i > 1000) {
-      return;
-    }
-
-    let nextSlide = findSimilar(lastPhoto);
-    if (!nextSlide) nextSlide = items[_keys[0]];
-    if (nextSlide) {
-      processSlide(nextSlide);
-      return runFind(slides);
-    }
-    return;
-
-  }
-
-  function findSimilar(slide1, orientation) {
-    for (let index in items) {
-      if (getMin(items[index], slide1)) {
-        if (!orientation || (orientation && items[index][orientation])) {
-          return items[index];
-        }
+      libProcesses.libChecked.push(libtotransfer);
+      libProcesses.libOnCheck.pop();
+      let libData = {
+        index: libtotransfer.libId,
+        booksCount:0,
+        books :[],
       }
+      libsResult.push(libData);
     }
+
+    if (libProcesses.libOnCheck.length === 0) {
+      let libId = bestLibs.shift();
+      if (libId) {
+        libProcesses.libOnCheck.push(params.libs[libId]);
+        libProcesses.libOnCheck[0].libId = libId;
+        libProcesses.libOnCheck[0].time_reg--;
+        libsCount++;
+      }
+      // libData.index = libProcesses.libOnCheck[0].id;
+    } else {
+      libProcesses.libOnCheck[0].time_reg--;
+    }
+
+    libProcesses.libChecked.forEach((lib, i)=>{
+      let takenBooks = lib.books.splice(0, lib.productivity);
+      // console.log(takenBooks);
+      libsResult[i].books.push(...takenBooks);
+      libsResult[i].booksCount = libsResult[i].books.length;
+      // console.log(libsResult[i].booksCount);
+    })
   }
 
-  // function getLast() {
-  //   let last = _.last(slides);
-  //   return items[_.last(last.split(' '))];
-  // }
-};
+
+  return {libsCount, libsResult};
+
+  // mp.forEach(param=>{
+  //   console.log(param[1]);
+  //   console.log(Object.keys(tree[param[1]]).sort((a,b)=> b-a).shift());
+  // })
 
 
-function getMin(slide1, slide2) {
-  let args, minPhoto, maxPhoto;
-  if (slide1.tagsCount >= slide2.tagsCount) {
-    minPhoto = slide2;
-    maxPhoto = slide1;
-  } else {
-    minPhoto = slide1;
-    maxPhoto = slide2;
-  }
 
-  let dif1 = _.difference(minPhoto.tags, maxPhoto.tags).length;
-  let dif2 = _.difference(maxPhoto.tags, minPhoto.tags).length;
-  let dif3 = maxPhoto.tagsCount - dif2;
-  let min = Math.min(dif1, dif2, dif3);
-  return min;
 }

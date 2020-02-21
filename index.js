@@ -15,7 +15,7 @@ let sets = helper.getSets();
     let result = await run(inputData);
 
     let outputData = helper.convertResult(result);
-
+    //
     helper.writeResult({set, outputData});
     console.timeEnd(`== ${set} finished by`);
   }
