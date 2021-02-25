@@ -5,6 +5,27 @@ const helper = require('./helper');
 
 let sets = helper.getSets();
 
+const parse = (inputData) => {
+  let intersections = [];
+  let cars = [];
+  let streetMock = {
+    startPoint:0,
+    finishPiont:0,
+    name: '',
+    length:0
+  };
+  let carMock = {
+    streetQuantity:0,
+    streets: []
+  };
+
+  let rows = inputData.split('\n');
+  let [D, I, S, U, F] = rows.shift().split(' ');
+  console.log(D, I, S, U, F);
+
+}
+
+
 for (let set of sets) {
   console.time(`== ${set} finished by`);
   let pathToFile = `${config.root}/source/${config.getSourceFileName(set)}`,
@@ -16,13 +37,12 @@ for (let set of sets) {
 console.log('===== All Work Done! =====');
 process.exit(0);
 
-
 /** @todo
  *
  * @param inputData
  * @returns {*}
  */
-function parse(inputData) {
+function parseOld(inputData) {
   let cnt = 0;
   let result = {
     n_books:0,
