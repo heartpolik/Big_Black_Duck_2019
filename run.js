@@ -6,18 +6,42 @@ const _ = require('lodash')
  * @returns {*}
  */
 module.exports = async (data) => {
-  const {D, cars, intersections} = data;
-  for(let i = 0; i < D; i++){
-for (car in )
-  }
+  const {D, cars, intersections, streets} = data;
+  
+  // for(let i = 0; i < D; i++){
+    const intersectionsLoad = {};
+    for (car of cars){
+      let firstStreet = Object.keys(car.streets).shift();
+      // intersectionsLoad[streets[firstStreet]] && intersectionsLoad[streets[firstStreet].finishPiont].groupLoad 
+      // ? intersectionsLoad[streets[firstStreet].finishPiont].groupLoad++ 
+      // : (intersectionsLoad[streets[firstStreet].finishPiont].groupLoad = 1);
+
+      _.result(intersectionsLoad, [streets[firstStreet].finishPiont, firstStreet ]) 
+      ? intersectionsLoad[streets[firstStreet].finishPiont][firstStreet]++ 
+      : _.set(intersectionsLoad, [streets[firstStreet].finishPiont, firstStreet], 1);
+
+      car.streets.firstStreet = undefined;
+    }
+    console.log(`load ${JSON.stringify(intersectionsLoad)}`);
+  // }
   const intersectionList = Object.keys(intersections);
   const operable = intersectionList.length;
 const resultArray = [operable];
-  intersectionList.forEach((intr) =>{
-resultArray.push(intr);
-resultArray.push(intersections[intr].length);
-intersections[intr].forEach((intrItem)=>{
-  resultArray.push(intrItem + ' ' + (Math.floor(Math.random() *1.8)+1));
+  intersectionList.forEach((intr, q) =>{
+    resultArray.push(intr);
+    resultArray.push(intersections[intr].length);
+
+
+intersections[intr].forEach((intrItem, i)=>{
+  if(q === 0){
+    console.log(intr);
+    _.result(intersectionsLoad, [intr, intrItem], 1)
+    resultArray.push(intrItem + ' ' + _.result(intersectionsLoad, [intr, intrItem], 1));
+    }
+    else { 
+      resultArray.push(intrItem + ' ' + (Math.floor(Math.random() *1.5)+1));
+    }
+  
 })
   })
   return resultArray;
