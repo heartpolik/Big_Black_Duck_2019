@@ -2,37 +2,57 @@ const _ = require('lodash');
 const fs = require('fs');
 const config = require('config');
 const helper = require('./helper');
+const { intersection } = require('lodash');
 
 let sets = helper.getSets();
 
 const parse = (inputData) => {
-  let streets = [];
+  let streets = {};
+  let intersections = {};
   let cars = [];
   let rows = inputData.split('\n');
   let [D, I, S, U, F] = rows.shift().split(' ');
-  console.log(D, I, S, U, F);
+
 
   for (let i = S; i>0; i-- ) {
     let streetRow = rows.shift().split(' ');
-    console.log(streetRow);
     streetMock = {};
     streetMock.startPoint = Number(streetRow.shift());
     streetMock.finishPiont = Number(streetRow.shift());
+    
     streetMock.name = streetRow.shift();
     streetMock.length = Number(streetRow.shift());
-    streets.push(streetMock);
+    streets[streetMock.name] = streetMock;
+    if (intersections[streetMock.finishPiont] && Array.isArray(intersections[streetMock.finishPiont])) {
+      intersections[streetMock.finishPiont].push(streetMock.name);
+    }
+    else { 
+      intersections[streetMock.finishPiont] = [streetMock.name];
+    }
   }
   for (let k = U; k>0; k--) {
     let carRow = rows.shift().split(' ');
     carMock = {};
     carMock.streetQuantity = Number(carRow.shift());
-    carMock.streets = carRow;
+    carMock.streets = {};
+    for(street of carRow){
+      carMock.streets[street] = streets[street].length;
+    }
+    routeLength = 0;
+    intersectionsArray = [];
+    carRow.forEach((element, i) => {
+      routeLength += i == 0 ? 0 : streets[element].length;
+intersectionsArray.push(streets[element].finishPiont)
+    });
+    carMock.routeLength = routeLength;
+    carMock.intersections = intersectionsArray;
     cars.push(carMock);
       }
 return {
   D,I,S,U,F,
   cars,
   streets,
+  intersections
 }
 }
 

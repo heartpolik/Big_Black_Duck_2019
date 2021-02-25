@@ -6,10 +6,7 @@ const _ = require('lodash')
  * @returns {*}
  */
 module.exports = async (data) => {
-  const {D, cars, intersections} = data;
-  for(let i = 0; i < D; i++){
-for (car in )
-  }
+  const {intersections} = data;
   const intersectionList = Object.keys(intersections);
   const operable = intersectionList.length;
 const resultArray = [operable];
