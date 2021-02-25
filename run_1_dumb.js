@@ -6,6 +6,7 @@ const _ = require('lodash')
  * @returns {*}
  */
 module.exports = async (data) => {
+console.log(data);
   const {intersections} = data;
   const intersectionList = Object.keys(intersections);
   const operable = intersectionList.length;
@@ -14,9 +15,11 @@ const resultArray = [operable];
 resultArray.push(intr);
 resultArray.push(intersections[intr].length);
 intersections[intr].forEach((intrItem)=>{
-  resultArray.push(intrItem + ' ' + (Math.floor(Math.random() *1.8)+1));
+  resultArray.push(intrItem + ' ' + 1);
 })
   })
+
+console.log(resultArray);
   return resultArray;
 
   // mp.forEach(param=>{
