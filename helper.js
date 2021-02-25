@@ -47,12 +47,12 @@ module.exports = {
    * @returns {string}
    */
   convertResult(data) {
+    let it = 0;
     let str = '',
         result = [];
-    str += data.libsCount;
-    for (let libs of data.libsResult) {
-      console.log(libs);
-      str += '\n' + `${libs.index} ${libs.booksCount}\n${libs.books.join(' ')}`;
+    for (let string of data) {
+      console.log('tik' + it++);
+      str += `${string}\n`;
     }
     return str;
   }

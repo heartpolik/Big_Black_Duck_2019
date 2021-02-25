@@ -8,12 +8,12 @@ module.exports = {
    */
   getSourceFileName(set) {
     return {
-      a: `${set}_example.txt`,
-      b: `${set}_read_on.txt`,
-      c: `${set}_incunabula.txt`,
-      d: `${set}_tough_choices.txt`,
-      e: `${set}_so_many_books.txt`,
-      f: `${set}_libraries_of_the_world.txt`,
+      a: `${set}.txt`,
+      b: `${set}.txt`,
+      c: `${set}.txt`,
+      d: `${set}.txt`,
+      e: `${set}.txt`,
+      f: `${set}.txt`,
     }[set]
   },
   filesToZip: [
