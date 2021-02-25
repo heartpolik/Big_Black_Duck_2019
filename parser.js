@@ -6,23 +6,34 @@ const helper = require('./helper');
 let sets = helper.getSets();
 
 const parse = (inputData) => {
-  let intersections = [];
+  let streets = [];
   let cars = [];
-  let streetMock = {
-    startPoint:0,
-    finishPiont:0,
-    name: '',
-    length:0
-  };
-  let carMock = {
-    streetQuantity:0,
-    streets: []
-  };
-
   let rows = inputData.split('\n');
   let [D, I, S, U, F] = rows.shift().split(' ');
   console.log(D, I, S, U, F);
 
+  for (let i = S; i>0; i-- ) {
+    let streetRow = rows.shift().split(' ');
+    console.log(streetRow);
+    streetMock = {};
+    streetMock.startPoint = Number(streetRow.shift());
+    streetMock.finishPiont = Number(streetRow.shift());
+    streetMock.name = streetRow.shift();
+    streetMock.length = Number(streetRow.shift());
+    streets.push(streetMock);
+  }
+  for (let k = U; k>0; k--) {
+    let carRow = rows.shift().split(' ');
+    carMock = {};
+    carMock.streetQuantity = Number(carRow.shift());
+    carMock.streets = carRow;
+    cars.push(carMock);
+      }
+return {
+  D,I,S,U,F,
+  cars,
+  streets,
+}
 }
 
 
